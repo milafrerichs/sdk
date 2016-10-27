@@ -95,4 +95,18 @@ describe('MapConfigTransfrormService', function() {
     });
   });
 
+  describe.only("test multiple layers", function () {
+    var testConfig = {'map': { 'layers': [{'name': '1', 'source': '3'}]}, 'sources':{"1": {"ptype": "gxp_osmsource", "id": "1"}, "0": {"ptype": "gxp_olsource", "id": "0"}, "3": {"apiKey": "AIzaSyDW1udWTJVtzuu1oKFfmV_gaVLxs522bCw", "ptype": "gxp_googlesource", "id": "3"}, "2": {"apiKey": "AssIUB4T0e3Duk86ZP3G_mxG8i_sfLzgzaPZDO1qC4XX96sGYtkTp27DcegjBprM", "ptype": "gxp_bingsource", "id": "2"}, "5": {"url": "http://geosm.adpc.net/geoserver/wms", "restUrl": "/gs/rest", "ptype": "gxp_wmscsource", "title": "Local Geoserver"}, "4": {"title": "My GeoServer WMS", "url": "http://58.137.55.229/geoserver/wms", "baseParams": {"VERSION": "1.1.1", "REQUEST": "GetCapabilities", "TILED": true, "SERVICE": "WMS"}, "ptype": "gxp_wmscsource", "restUrl": "/gs/rest", "id": "4"}}};
+    for (var source in testConfig.sources) {
+      (function (source) {
+        describe("Source of type (" + testConfig.sources[source].ptype + ")", function () {
+          it('should return a layer with this type', function() {
+            testConfig.map.layers[0].source = source;
+            var result = MapConfigTransformService.transform(testConfig);
+            assert.equal(result.layers.length,1);
+          });
+        });
+      })(source);
+    }
+  });
 });
